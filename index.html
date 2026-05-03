@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commute Pilote — Étude utilisateurs Roteo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0d2d5e;
+      --navy-deep: #081d3f;
+      --navy-light: #1a4a8f;
+      --sky: #aed6f1;
+      --sky-pale: #e8f2fa;
+      --paper: #f7f4ee;
+      --paper-warm: #efe9dc;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --rule: #d4cfc2;
+      --accent: #c8553d;
+      --accent-soft: #e8a598;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter Tight', -apple-system, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      font-size: 16px;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(13, 45, 94, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(200, 85, 61, 0.03) 0%, transparent 50%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ============ HEADER ============ */
+    header {
+      background: var(--navy);
+      color: var(--paper);
+      padding: 80px 0 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent 0 39px, rgba(174, 214, 241, 0.04) 39px 40px),
+        repeating-linear-gradient(90deg, transparent 0 39px, rgba(174, 214, 241, 0.04) 39px 40px);
+      pointer-events: none;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sky);
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid rgba(174, 214, 241, 0.4);
+      border-radius: 2px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--sky);
+      font-weight: 400;
+    }
+
+    .subtitle {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 19px;
+      color: rgba(247, 244, 238, 0.85);
+      max-width: 560px;
+      position: relative;
+      margin-bottom: 40px;
+    }
+
+    .intro-meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: rgba(174, 214, 241, 0.7);
+      position: relative;
+    }
+
+    .intro-meta span::before {
+      content: '◆';
+      color: var(--accent-soft);
+      margin-right: 8px;
+    }
+
+    /* ============ PROGRESS ============ */
+    .progress-wrap {
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      z-index: 100;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--rule);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--paper-warm);
+      border-radius: 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--navy);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-top: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ============ SECTIONS ============ */
+    main {
+      padding: 60px 0 120px;
+    }
+
+    .section {
+      margin-bottom: 72px;
+      padding-bottom: 72px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 400;
+      font-size: 32px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    .section-desc {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 17px;
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+
+    /* ============ QUESTIONS ============ */
+    .question {
+      margin-bottom: 36px;
+    }
+
+    .question-label {
+      display: block;
+      font-weight: 500;
+      font-size: 16px;
+      margin-bottom: 14px;
+      color: var(--ink);
+    }
+
+    .question-help {
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .required {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--navy);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(13, 45, 94, 0.08);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: 'Inter Tight', sans-serif;
+      line-height: 1.5;
+    }
+
+    /* ============ RADIO / CHECKBOX ============ */
+    .choice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border-radius: 2px;
+    }
+
+    .choice:hover {
+      background: var(--sky-pale);
+      border-color: var(--navy-light);
+    }
+
+    .choice input {
+      margin-top: 3px;
+      accent-color: var(--navy);
+      flex-shrink: 0;
+    }
+
+    .choice input:checked~.choice-text {
+      font-weight: 500;
+    }
+
+    .choice:has(input:checked) {
+      background: var(--sky-pale);
+      border-color: var(--navy);
+    }
+
+    .choice-text {
+      font-size: 15px;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .choice-text small {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 13px;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    /* ============ SCALE 1-5 ============ */
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .scale-item {
+      text-align: center;
+      cursor: pointer;
+      padding: 14px 6px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      transition: all 0.15s ease;
+      border-radius: 2px;
+    }
+
+    .scale-item:hover {
+      background: var(--sky-pale);
+      border-color: var(--navy-light);
+    }
+
+    .scale-item input {
+      display: none;
+    }
+
+    .scale-item:has(input:checked) {
+      background: var(--navy);
+      color: var(--paper);
+      border-color: var(--navy);
+    }
+
+    .scale-num {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      font-weight: 500;
+      display: block;
+      line-height: 1;
+    }
+
+    .scale-label {
+      font-size: 11px;
+      display: block;
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .scale-bounds {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* ============ TRANSPORT GRID ============ */
+    .transport-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .transport-card {
+      border: 1px solid var(--rule);
+      padding: 20px 16px;
+      text-align: center;
+      background: var(--paper);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .transport-card:hover {
+      background: var(--sky-pale);
+      border-color: var(--navy-light);
+      transform: translateY(-1px);
+    }
+
+    .transport-card input {
+      display: none;
+    }
+
+    .transport-card:has(input:checked) {
+      background: var(--navy);
+      color: var(--paper);
+      border-color: var(--navy);
+    }
+
+    .transport-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .transport-name {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    /* ============ PRIORITY RANK ============ */
+    .priority-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .priority-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+    }
+
+    .priority-item:hover {
+      background: var(--sky-pale);
+    }
+
+    .priority-rank {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--rule);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .priority-item select {
+      width: auto;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .priority-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    /* ============ CTA ============ */
+    .cta-wrap {
+      text-align: center;
+      padding: 60px 0;
+      background: var(--paper-warm);
+      margin-top: 80px;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .cta-wrap::before {
+      content: '◇  ◇  ◇';
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      letter-spacing: 1em;
+      margin-bottom: 24px;
+      opacity: 0.5;
+    }
+
+    button.submit {
+      background: var(--navy);
+      color: var(--paper);
+      border: none;
+      padding: 18px 48px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 2px;
+      box-shadow: 0 4px 12px rgba(13, 45, 94, 0.15);
+    }
+
+    button.submit:hover {
+      background: var(--navy-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(13, 45, 94, 0.25);
+    }
+
+    button.submit:disabled {
+      background: var(--rule);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cta-note {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    /* ============ SUCCESS ============ */
+    .success {
+      display: none;
+      text-align: center;
+      padding: 80px 24px;
+      background: var(--sky-pale);
+      border: 1px solid var(--sky);
+      border-radius: 2px;
+    }
+
+    .success.show {
+      display: block;
+    }
+
+    .success h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: 36px;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .success p {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 17px;
+      max-width: 480px;
+      margin: 0 auto 32px;
+    }
+
+    .summary {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 24px;
+      margin-top: 32px;
+      text-align: left;
+      border-radius: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-soft);
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-soft);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-top: 1px solid var(--rule);
+    }
+
+    footer span {
+      color: var(--accent);
+    }
+
+    /* ============ MOBILE ============ */
+    @media (max-width: 640px) {
+      header {
+        padding: 60px 0 80px;
+      }
+
+      .scale {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+      }
+
+      .scale-item {
+        padding: 10px 2px;
+      }
+
+      .scale-num {
+        font-size: 18px;
+      }
+
+      .scale-label {
+        font-size: 9px;
+      }
+
+      .transport-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 26px;
+      }
+
+      .intro-meta {
+        gap: 16px;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <span class="tag">Étude utilisateurs · Roteo by Daucir</span>
+      <h1>Commute pilote.<br>Vos <em>vraies</em> galères.</h1>
+      <p class="subtitle">
+        Avant de coder un outil qui ne servirait à personne, je voudrais comprendre comment vous préparez vos commutes —
+        entre l'agenda compagnie, la recherche de vols, le train, la voiture, et les imprévus du quotidien.
+      </p>
+      <div class="intro-meta">
+        <span>10-12 minutes</span>
+        <span>Anonyme si vous le souhaitez</span>
+        <span>Réponses libres bienvenues</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+      </div>
+      <div class="progress-text" id="progress-text">SECTION 0 / 6</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <form id="survey" action="https://api.web3forms.com/submit" method="POST">
+
+        <!-- ===========================================================
+     WEB3FORMS — CONFIGURATION
+     ===========================================================
+     1. Crée ta clé sur https://web3forms.com (gratuit, juste un email)
+     2. Remplace YOUR_ACCESS_KEY_HERE ci-dessous par ta clé reçue
+     3. Adapte le sujet et le from_name si tu veux
+     =========================================================== -->
+        <input type="hidden" name="access_key" value="aa85369d-927e-4ee8-ad69-11386a3d992f">
+        <input type="hidden" name="subject" value="Nouvelle réponse — Étude commute pilote Roteo">
+        <input type="hidden" name="from_name" value="Roteo — Étude utilisateurs">
+        <input type="hidden" name="redirect" value="false">
+        <!-- Anti-spam honeypot : les bots remplissent ce champ, les humains ne le voient pas -->
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+        <!-- ============ SECTION 1 : VOUS ============ -->
+        <section class="section" data-section="1">
+          <div class="section-num">— 01 / Profil</div>
+          <h2 class="section-title">Qui êtes-vous ?</h2>
+          <p class="section-desc">Quelques infos pour contextualiser vos réponses. Tout est optionnel sauf indication
+            contraire.</p>
+
+          <div class="question">
+            <label class="question-label">Type d'opération <span class="required">requis</span></label>
+            <div class="choice-list">
+              <label class="choice"><input type="radio" name="op_type" value="court" required><span
+                  class="choice-text">Court-courrier <small>moyens-courriers européens, rotations à la journée ou
+                    découchés courts</small></span></label>
+              <label class="choice"><input type="radio" name="op_type" value="moyen"><span
+                  class="choice-text">Moyen-courrier <small>vols 3-6h, rotations multi-jours
+                    fréquentes</small></span></label>
+              <label class="choice"><input type="radio" name="op_type" value="long"><span
+                  class="choice-text">Long-courrier <small>vols intercontinentaux, rotations
+                    longues</small></span></label>
+              <label class="choice"><input type="radio" name="op_type" value="mixte"><span class="choice-text">Mixte /
+                  Régional <small>combinaison ou autre type d'opération</small></span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="base">Votre base d'affectation <span
+                class="required">requis</span></label>
+            <p class="question-help">Code IATA ou nom de l'aéroport (ex. CDG, ORY, NCE…)</p>
+            <input type="text" name="base" id="base" placeholder="CDG" required>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="domicile">Votre lieu de domicile</label>
+            <p class="question-help">Ville ou région — sert à comprendre la distance et le mode de commute</p>
+            <input type="text" name="domicile" id="domicile" placeholder="Dublin, Lyon, Lille…">
+          </div>
+
+          <div class="question">
+            <label class="question-label">Fréquence de commute</label>
+            <div class="choice-list">
+              <label class="choice"><input type="radio" name="frequence" value="quotidien"><span
+                  class="choice-text">Quasi quotidien (je rentre dormir chez moi quand possible)</span></label>
+              <label class="choice"><input type="radio" name="frequence" value="rotation"><span class="choice-text">À
+                  chaque rotation (aller-retour entre domicile et base)</span></label>
+              <label class="choice"><input type="radio" name="frequence" value="hebdo"><span
+                  class="choice-text">Hebdomadaire (semaine à la base, week-end à la maison)</span></label>
+              <label class="choice"><input type="radio" name="frequence" value="ponctuel"><span
+                  class="choice-text">Ponctuel (je commute occasionnellement)</span></label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECTION 2 : MODES ============ -->
+        <section class="section" data-section="2">
+          <div class="section-num">— 02 / Modes de transport</div>
+          <h2 class="section-title">Comment commutez-vous, vraiment ?</h2>
+          <p class="section-desc">Beaucoup de pilotes mixent plusieurs modes selon le créneau, la météo, le prix. On
+            essaie de capter cette réalité.</p>
+
+          <div class="question">
+            <label class="question-label">Quels modes utilisez-vous régulièrement ? <span class="required">cochez tout
+                ce qui s'applique</span></label>
+            <div class="transport-grid">
+              <label class="transport-card"><input type="checkbox" name="modes" value="avion"><span
+                  class="transport-icon">✈</span><span class="transport-name">Avion</span></label>
+              <label class="transport-card"><input type="checkbox" name="modes" value="train"><span
+                  class="transport-icon">⛯</span><span class="transport-name">Train</span></label>
+              <label class="transport-card"><input type="checkbox" name="modes" value="voiture"><span
+                  class="transport-icon">⛟</span><span class="transport-name">Voiture</span></label>
+              <label class="transport-card"><input type="checkbox" name="modes" value="bus"><span
+                  class="transport-icon">⛐</span><span class="transport-name">Bus / Car</span></label>
+              <label class="transport-card"><input type="checkbox" name="modes" value="combine"><span
+                  class="transport-icon">⇄</span><span class="transport-name">Multimodal</span></label>
+              <label class="transport-card"><input type="checkbox" name="modes" value="autre"><span
+                  class="transport-icon">◇</span><span class="transport-name">Autre</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="combinaison">Si vous combinez plusieurs modes, décrivez votre commute
+              type</label>
+            <p class="question-help">Ex. "Voiture jusqu'au parking longue durée de Roissy, puis avion staff travel
+              jusqu'à Dublin" — ces détails sont précieux.</p>
+            <textarea name="combinaison" id="combinaison"
+              placeholder="Décrivez votre commute habituel, étape par étape…"></textarea>
+          </div>
+
+          <div class="question">
+            <label class="question-label">Si vous prenez l'avion, quel(s) outil(s) staff travel utilisez-vous ?</label>
+            <div class="choice-list">
+              <label class="choice"><input type="checkbox" name="staff_tools" value="gpnet"><span
+                  class="choice-text">GP-Net (Air France / SkyTeam)</span></label>
+              <label class="choice"><input type="checkbox" name="staff_tools" value="myidtravel"><span
+                  class="choice-text">MyIDTravel</span></label>
+              <label class="choice"><input type="checkbox" name="staff_tools" value="zed"><span class="choice-text">ZED
+                  Travel / autre interline</span></label>
+              <label class="choice"><input type="checkbox" name="staff_tools" value="autre_compagnie"><span
+                  class="choice-text">Outil interne d'une autre compagnie</span></label>
+              <label class="choice"><input type="checkbox" name="staff_tools" value="achat"><span
+                  class="choice-text">J'achète des billets standards plein tarif</span></label>
+              <label class="choice"><input type="checkbox" name="staff_tools" value="aucun"><span class="choice-text">Je
+                  n'ai aucun accès staff travel</span></label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECTION 3 : LE COEUR ============ -->
+        <section class="section" data-section="3">
+          <div class="section-num">— 03 / Le quotidien</div>
+          <h2 class="section-title">Vos vraies frictions.</h2>
+          <p class="section-desc">C'est la partie la plus importante — vos réponses libres ici vont vraiment guider le
+            développement de l'outil.</p>
+
+          <div class="question">
+            <label class="question-label">Quand vous préparez un commute, qu'est-ce qui vous prend le plus de temps ?
+              <span class="required">requis</span></label>
+            <p class="question-help">Soyez concret : "consulter 3 sites différents pour les loads", "vérifier
+              l'enchaînement avec ma rotation", "trouver un train pas trop cher en dernière minute"…</p>
+            <textarea name="friction_temps" required placeholder="Ce qui me prend le plus de temps, c'est…"></textarea>
+          </div>
+
+          <div class="question">
+            <label class="question-label">Quelle est la galère la plus fréquente que vous rencontrez ?</label>
+            <p class="question-help">Le truc qui vous fait râler à chaque fois ou presque.</p>
+            <textarea name="galere" placeholder="Ce qui me sort par les yeux, c'est…"></textarea>
+          </div>
+
+          <div class="question">
+            <label class="question-label">À quelle fréquence un commute vous a-t-il "mal tourné" cette dernière année
+              ?</label>
+            <p class="question-help">Annulation, vol staff travel raté, retard cascade, mauvaise estimation de
+              présentation, etc.</p>
+            <div class="choice-list">
+              <label class="choice"><input type="radio" name="incidents" value="jamais"><span class="choice-text">Jamais
+                  ou presque</span></label>
+              <label class="choice"><input type="radio" name="incidents" value="rare"><span class="choice-text">1-2 fois
+                  dans l'année</span></label>
+              <label class="choice"><input type="radio" name="incidents" value="trimestre"><span
+                  class="choice-text">Quelques fois par trimestre</span></label>
+              <label class="choice"><input type="radio" name="incidents" value="mensuel"><span
+                  class="choice-text">Mensuellement ou plus</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">Sur une échelle de 1 à 5, à quel point la préparation de vos commutes est-elle
+              stressante ?</label>
+            <div class="scale">
+              <label class="scale-item"><input type="radio" name="stress" value="1"><span
+                  class="scale-num">1</span><span class="scale-label">Zen</span></label>
+              <label class="scale-item"><input type="radio" name="stress" value="2"><span
+                  class="scale-num">2</span><span class="scale-label">Léger</span></label>
+              <label class="scale-item"><input type="radio" name="stress" value="3"><span
+                  class="scale-num">3</span><span class="scale-label">Modéré</span></label>
+              <label class="scale-item"><input type="radio" name="stress" value="4"><span
+                  class="scale-num">4</span><span class="scale-label">Tendu</span></label>
+              <label class="scale-item"><input type="radio" name="stress" value="5"><span
+                  class="scale-num">5</span><span class="scale-label">Intense</span></label>
+            </div>
+            <div class="scale-bounds"><span>Routine sans effort</span><span>Source de stress majeure</span></div>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="solution_actuelle">Comment faites-vous aujourd'hui ?</label>
+            <p class="question-help">Outils, applis, fichiers Excel maison, méthode mentale… On veut comprendre votre
+              stack actuel.</p>
+            <textarea name="solution_actuelle" id="solution_actuelle"
+              placeholder="Ma méthode actuelle, c'est…"></textarea>
+          </div>
+        </section>
+
+        <!-- ============ SECTION 4 : AGENDA ============ -->
+        <section class="section" data-section="4">
+          <div class="section-num">— 04 / Agenda compagnie</div>
+          <h2 class="section-title">Et l'agenda dans tout ça ?</h2>
+          <p class="section-desc">Comprendre comment vous gérez la lecture de votre planning compagnie est central pour
+            l'outil envisagé.</p>
+
+          <div class="question">
+            <label class="question-label">Synchronisez-vous votre planning compagnie vers un calendrier personnel
+              ?</label>
+            <div class="choice-list">
+              <label class="choice"><input type="radio" name="sync_calendar" value="google"><span
+                  class="choice-text">Oui, vers Google Calendar</span></label>
+              <label class="choice"><input type="radio" name="sync_calendar" value="apple"><span
+                  class="choice-text">Oui, vers Apple Calendar / iCloud</span></label>
+              <label class="choice"><input type="radio" name="sync_calendar" value="outlook"><span
+                  class="choice-text">Oui, vers Outlook / Office 365</span></label>
+              <label class="choice"><input type="radio" name="sync_calendar" value="autre"><span
+                  class="choice-text">Oui, autre (précisez ci-dessous)</span></label>
+              <label class="choice"><input type="radio" name="sync_calendar" value="non"><span class="choice-text">Non,
+                  je consulte uniquement l'app compagnie</span></label>
+              <label class="choice"><input type="radio" name="sync_calendar" value="essaye"><span
+                  class="choice-text">J'ai essayé mais c'est compliqué / ça ne marche pas bien</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="sync_method">Si oui, comment faites-vous cette synchronisation ?</label>
+            <p class="question-help">Lien iCal officiel, app tierce (Crew Mobile, etc.), script perso, copier-coller
+              manuel…</p>
+            <textarea name="sync_method" id="sync_method" placeholder="Ma méthode de synchro, c'est…"></textarea>
+          </div>
+
+          <div class="question">
+            <label class="question-label">Sur 1 à 5, à quel point votre agenda compagnie actuel est-il fiable et lisible
+              ?</label>
+            <div class="scale">
+              <label class="scale-item"><input type="radio" name="agenda_qualite" value="1"><span
+                  class="scale-num">1</span><span class="scale-label">Pénible</span></label>
+              <label class="scale-item"><input type="radio" name="agenda_qualite" value="2"><span
+                  class="scale-num">2</span><span class="scale-label">Moyen</span></label>
+              <label class="scale-item"><input type="radio" name="agenda_qualite" value="3"><span
+                  class="scale-num">3</span><span class="scale-label">Correct</span></label>
+              <label class="scale-item"><input type="radio" name="agenda_qualite" value="4"><span
+                  class="scale-num">4</span><span class="scale-label">Bon</span></label>
+              <label class="scale-item"><input type="radio" name="agenda_qualite" value="5"><span
+                  class="scale-num">5</span><span class="scale-label">Excellent</span></label>
+            </div>
+            <div class="scale-bounds"><span>Inutilisable au quotidien</span><span>Parfait pour mes besoins</span></div>
+          </div>
+        </section>
+
+        <!-- ============ SECTION 5 : OUTIL IDÉAL ============ -->
+        <section class="section" data-section="5">
+          <div class="section-num">— 05 / Outil idéal</div>
+          <h2 class="section-title">Si une baguette magique existait…</h2>
+          <p class="section-desc">Vos attentes vis-à-vis d'un outil dédié au commute pilote. Pas de bonne ou mauvaise
+            réponse.</p>
+
+          <div class="question">
+            <label class="question-label">Parmi ces fonctionnalités, lesquelles vous seraient le plus utiles ?</label>
+            <p class="question-help">Notez chaque fonctionnalité de 1 (inutile) à 5 (indispensable).</p>
+
+            <div style="margin-top: 20px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Suggestion automatique de vols
+                compatibles avec ma rotation</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_vols" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_vols" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_vols" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_vols" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_vols" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Calcul automatique de l'heure de
+                présentation et marges</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_presentation" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_presentation" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_presentation" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_presentation" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_presentation" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Suggestions train (SNCF Connect,
+                Trainline) intégrées</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_train" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_train" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_train" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_train" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_train" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Estimation trajet voiture (trafic,
+                parking aéroport)</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_voiture" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_voiture" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_voiture" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_voiture" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_voiture" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Loads/remplissages staff travel
+                (GP-Net, MyIDTravel)</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_loads" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_loads" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_loads" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_loads" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_loads" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Suggestions hôtel près de la base /
+                aéroport</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_hotel" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_hotel" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_hotel" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_hotel" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_hotel" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <p style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Alertes en cas de retard / annulation
+                impactant mon commute</p>
+              <div class="scale">
+                <label class="scale-item"><input type="radio" name="feat_alertes" value="1"><span
+                    class="scale-num">1</span></label>
+                <label class="scale-item"><input type="radio" name="feat_alertes" value="2"><span
+                    class="scale-num">2</span></label>
+                <label class="scale-item"><input type="radio" name="feat_alertes" value="3"><span
+                    class="scale-num">3</span></label>
+                <label class="scale-item"><input type="radio" name="feat_alertes" value="4"><span
+                    class="scale-num">4</span></label>
+                <label class="scale-item"><input type="radio" name="feat_alertes" value="5"><span
+                    class="scale-num">5</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="manque">Une fonctionnalité que je n'ai pas listée et qui changerait votre
+              vie ?</label>
+            <p class="question-help">C'est ici que vous me dites ce à quoi je n'ai pas pensé.</p>
+            <textarea name="manque" id="manque" placeholder="Ce qui manque vraiment, c'est…"></textarea>
+          </div>
+
+          <div class="question">
+            <label class="question-label">Combien seriez-vous prêt à payer par mois pour un outil qui résout vraiment
+              vos galères ?</label>
+            <div class="choice-list">
+              <label class="choice"><input type="radio" name="prix" value="0"><span class="choice-text">0 € — uniquement
+                  gratuit</span></label>
+              <label class="choice"><input type="radio" name="prix" value="2-5"><span class="choice-text">2-5 € /
+                  mois</span></label>
+              <label class="choice"><input type="radio" name="prix" value="5-10"><span class="choice-text">5-10 € /
+                  mois</span></label>
+              <label class="choice"><input type="radio" name="prix" value="10-20"><span class="choice-text">10-20 € /
+                  mois</span></label>
+              <label class="choice"><input type="radio" name="prix" value="20+"><span class="choice-text">Plus de 20 € /
+                  mois si la valeur est là</span></label>
+              <label class="choice"><input type="radio" name="prix" value="achat"><span class="choice-text">Plutôt un
+                  achat unique qu'un abonnement</span></label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECTION 6 : LIBRE ============ -->
+        <section class="section" data-section="6">
+          <div class="section-num">— 06 / Libre</div>
+          <h2 class="section-title">Le mot de la fin.</h2>
+          <p class="section-desc">L'espace libre où vous me dites ce qui vous tient à cœur sur le sujet.</p>
+
+          <div class="question">
+            <label class="question-label" for="libre">Anecdote, frustration, idée, mise en garde — tout est
+              bienvenu</label>
+            <textarea name="libre" id="libre" rows="5"
+              placeholder="Si vous deviez me dire une seule chose sur le commute pilote…"></textarea>
+          </div>
+
+          <div class="question">
+            <label class="question-label">Accepteriez-vous d'être recontacté pour tester une bêta de l'outil ?</label>
+            <div class="choice-list">
+              <label class="choice"><input type="radio" name="beta" value="oui"><span class="choice-text">Oui, avec
+                  plaisir</span></label>
+              <label class="choice"><input type="radio" name="beta" value="peutetre"><span
+                  class="choice-text">Peut-être, ça dépend</span></label>
+              <label class="choice"><input type="radio" name="beta" value="non"><span class="choice-text">Non
+                  merci</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label" for="contact">Si oui, votre contact (email ou prénom + compagnie) —
+              optionnel</label>
+            <input type="text" name="contact" id="contact" placeholder="email@exemple.com ou Jean - Air France">
+          </div>
+        </section>
+
+        <div class="cta-wrap">
+          <button type="submit" class="submit" id="submit-btn">Envoyer mes réponses</button>
+          <p class="cta-note">Merci pour le temps consacré — c'est précieux.</p>
+        </div>
+
+      </form>
+
+      <div class="success" id="success">
+        <h2>Merci ✦</h2>
+        <p>Vos réponses ont été envoyées. Je reviendrai vers vous prochainement avec une synthèse anonymisée si vous
+          l'avez souhaité.</p>
+        <button type="button" class="submit" id="copy-btn">Copier mes réponses (sauvegarde)</button>
+        <button type="button" class="submit" id="download-btn"
+          style="margin-left: 12px; background: var(--accent);">Télécharger en JSON</button>
+        <div class="summary" id="summary"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      Roteo · Étude utilisateurs · <span>Daucir</span> · 2026
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('survey');
+    const progressFill = document.getElementById('progress');
+    const progressText = document.getElementById('progress-text');
+    const sections = document.querySelectorAll('.section');
+    const successDiv = document.getElementById('success');
+    const summaryDiv = document.getElementById('summary');
+
+    // Progress tracking based on scroll
+    function updateProgress() {
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      const pct = Math.min(100, (scrolled / total) * 100);
+      progressFill.style.width = pct + '%';
+
+      // Detect current section
+      let currentSection = 0;
+      sections.forEach((sec, idx) => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top < window.innerHeight / 2) currentSection = idx + 1;
+      });
+      progressText.textContent = `SECTION ${currentSection} / ${sections.length}`;
+    }
+
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    // Form submission — envoi vers Web3Forms
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submit-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours…';
+
+      const formData = new FormData(form);
+      const data = {};
+
+      // Construction de l'objet data (gestion des checkboxes multiples)
+      for (const [key, value] of formData.entries()) {
+        if (data[key]) {
+          if (Array.isArray(data[key])) data[key].push(value);
+          else data[key] = [data[key], value];
+        } else {
+          data[key] = value;
+        }
+      }
+
+      // Génération du récapitulatif lisible (utilisé en sauvegarde + dans l'email reçu)
+      const labels = {
+        op_type: 'Type d\'opération',
+        base: 'Base d\'affectation',
+        domicile: 'Domicile',
+        frequence: 'Fréquence commute',
+        modes: 'Modes utilisés',
+        combinaison: 'Commute type',
+        staff_tools: 'Outils staff travel',
+        friction_temps: 'Ce qui prend le plus de temps',
+        galere: 'Galère fréquente',
+        incidents: 'Incidents/an',
+        stress: 'Niveau de stress (1-5)',
+        solution_actuelle: 'Méthode actuelle',
+        sync_calendar: 'Synchro calendrier',
+        sync_method: 'Méthode de synchro',
+        agenda_qualite: 'Qualité agenda (1-5)',
+        feat_vols: 'Suggestion vols (1-5)',
+        feat_presentation: 'Calcul présentation (1-5)',
+        feat_train: 'Suggestions train (1-5)',
+        feat_voiture: 'Trajet voiture (1-5)',
+        feat_loads: 'Loads staff (1-5)',
+        feat_hotel: 'Hôtel (1-5)',
+        feat_alertes: 'Alertes (1-5)',
+        manque: 'Fonctionnalité manquante',
+        prix: 'Prix accepté',
+        libre: 'Mot libre',
+        beta: 'Bêta testeur',
+        contact: 'Contact'
+      };
+
+      let summary = `=== ÉTUDE UTILISATEURS ROTEO — DAUCIR ===\nDate : ${new Date().toLocaleString('fr-FR')}\n\n`;
+      for (const [key, label] of Object.entries(labels)) {
+        const val = data[key];
+        if (val !== undefined && val !== '') {
+          summary += `▸ ${label}\n  ${Array.isArray(val) ? val.join(', ') : val}\n\n`;
+        }
+      }
+
+      // Sauvegarde locale en cas de problème réseau
+      window.surveyData = data;
+      window.surveySummary = summary;
+
+      // Préparation du payload pour Web3Forms (JSON)
+      // On ajoute le récapitulatif lisible dans un champ "message" pour qu'il apparaisse dans l'email
+      const payload = {
+        ...data,
+        message: summary
+      };
+
+      // Conversion des arrays en strings pour l'envoi
+      for (const key in payload) {
+        if (Array.isArray(payload[key])) {
+          payload[key] = payload[key].join(', ');
+        }
+      }
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.status === 200 && result.success) {
+          // Succès
+          summaryDiv.textContent = summary;
+          successDiv.classList.add('show');
+          form.style.display = 'none';
+          successDiv.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          // Erreur retournée par Web3Forms (ex. clé invalide)
+          throw new Error(result.message || 'Erreur lors de l\'envoi');
+        }
+      } catch (error) {
+        // Erreur réseau ou Web3Forms — fallback : on affiche quand même le récap pour copie manuelle
+        console.error('Erreur Web3Forms :', error);
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+
+        const errorMsg = document.createElement('div');
+        errorMsg.style.cssText = 'background: #fde8e4; border: 1px solid #c8553d; padding: 16px; margin-top: 16px; border-radius: 2px; color: #8a2818; font-size: 14px;';
+        errorMsg.innerHTML = `
+      <strong>L'envoi automatique a échoué.</strong><br>
+      Vos réponses sont sauvegardées localement. Vous pouvez les copier ci-dessous et me les envoyer par email.<br>
+      <em style="font-size: 12px;">Détail : ${error.message}</em>
+    `;
+
+        // On affiche quand même le succès local pour permettre la copie manuelle
+        summaryDiv.textContent = summary;
+        successDiv.classList.add('show');
+        successDiv.insertBefore(errorMsg, successDiv.firstChild);
+        form.style.display = 'none';
+        successDiv.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // Copy to clipboard
+    document.getElementById('copy-btn').addEventListener('click', () => {
+      navigator.clipboard.writeText(window.surveySummary).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copié';
+        setTimeout(() => { btn.textContent = 'Copier mes réponses'; }, 2000);
+      });
+    });
+
+    // Download JSON
+    document.getElementById('download-btn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(window.surveyData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `roteo-survey-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+
+</body>
+
+</html>
